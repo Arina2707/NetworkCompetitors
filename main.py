@@ -29,6 +29,7 @@ def make_net_scores():
                                          'Totalxy', 'Country_good', 'Shares'])
 
     df['Url'] = data['Url1']
+    df['target'] = data['CB']
     data_scores = {}
 
     for i, row in df.iterrows():
@@ -61,9 +62,12 @@ def make_net_scores():
         BN = OrgBayesNet()
         BN.bake_network(e1, w1, e2)
         score_org = BN.make_scores()
-        data_scores[row['Url']] = [score_product, score_tech, score_org]
 
-    return pd.DataFrame.from_dict(data_scores, orient='index')
+        data_scores[row['Url']] = [score_product, score_tech, score_org, row['target']]
+
+    result_df = pd.DataFrame.from_dict(data_scores, orient='index', columns=['product', 'tech', 'org', 'target'])
+
+    return result_df
 
 
 if __name__ == '__main__':
