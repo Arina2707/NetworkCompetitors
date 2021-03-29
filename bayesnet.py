@@ -9,8 +9,7 @@ class BayesNet:
 
     def make_scores(self):
         beliefs1 = self.network.predict_proba({})
-        print(self.network.states)
-        print(beliefs1)
+
         beliefs1 = map(str, beliefs1)
         z1 = "\n".join(
             "{}".format(belief) for state, belief in zip(self.network.states, beliefs1) if state.name == "Overall")
