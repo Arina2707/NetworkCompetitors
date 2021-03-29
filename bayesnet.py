@@ -9,6 +9,8 @@ class BayesNet:
 
     def make_scores(self):
         beliefs1 = self.network.predict_proba({})
+        print(self.network.states)
+        print(beliefs1)
         beliefs1 = map(str, beliefs1)
         z1 = "\n".join(
             "{}".format(belief) for state, belief in zip(self.network.states, beliefs1) if state.name == "Overall")
@@ -32,8 +34,8 @@ class ProductBayesNet(BayesNet):
 
         product3_energy = DiscreteDistribution({'yes': e3, 'no': 1 - e3})
         product3_wl = DiscreteDistribution({'yes': w3, 'no': 1 - w3})
-        avg_delivery_time = DiscreteDistribution({'yes': dt, 'no': 1 - dt})
-        avg_price = DiscreteDistribution({'yes': ap, 'no': 1 - ap})
+        avg_delivery_time = DiscreteDistribution({'yes': 1-dt, 'no': dt})
+        avg_price = DiscreteDistribution({'yes': 1-ap, 'no': ap})
 
         return [product1_energy, product1_wl, product2_energy, product2_wl, product3_energy, product3_wl,
                 avg_delivery_time, avg_price]
@@ -125,7 +127,7 @@ class ProductBayesNet(BayesNet):
         s10 = State(n[9], name="pr2")
         s11 = State(n[10], name="pr3_tech")
         s12 = State(n[11], name="pr3")
-        s13 = State(n[13], name="Overall")
+        s13 = State(n[12], name="Overall")
 
         self.network.add_states(s1, s2, s3, s4, s5, s6, s7, s8, s9, s10, s11, s12, s13)
         self.network.add_edge(s1, s9)
