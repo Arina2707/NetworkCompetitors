@@ -14,12 +14,18 @@ def make_net_scores():
     df = data[['Wavelength_p', 'Energy_p',
                'Wavelength_f', 'Energy_f', 'Wavelength', 'Energy', 'Price', 'Shipment', 'Total_x', 'Total_y',
                'Total_medicine', 'In_spie', 'Country', 'CB', 'Public/private', 'aws1', 'aws2', 'aws3', 'aws4',
-               'Mensions', 'Positiveness', 'Average positiveness']]
+               'Mentions', 'Positiveness', 'Average positiveness']]
 
     df['Totalxy'] = df['Total_x'] + df['Total_y']
     df['Country_good'] = np.where(df['Country'].isin(['finland', 'us', 'china', 'germany']), 1, 0)
     df['Shares'] = np.where(df['Public/private'] == 'public', 1, 0)
-    df['aws1'] = np.where(df['aws1'] == 'None', df['aws1'].mean(), df['aws1'])
+
+    df['aws1'].replace('None', 0, inplace=True)
+    df['aws1'] = np.where(df['aws1'] == 0, df['aws1'].mean(), df['aws1'])
+
+    df['aws2'].replace(-1, 0, inplace=True)
+    df['aws3'].replace(-1, 0, inplace=True)
+    df['aws4'].replace(-1, 0, inplace=True)
     df['aws2'] = np.where(df['aws2'] == -1, df['aws2'].mean(), df['aws2'])
     df['aws3'] = np.where(df['aws3'] == -1, df['aws3'].mean(), df['aws3'])
     df['aws4'] = np.where(df['aws4'] == -1, df['aws4'].mean(), df['aws4'])
@@ -92,4 +98,4 @@ def make_net_scores():
 
 if __name__ == '__main__':
     df = make_net_scores()
-    df.to_excel(r'C:\Users\maxim\OneDrive\Desktop\folder\diplom\data\parsing\companies_scores.xlsx')
+    df.to_excel(r'C:\Users\maxim\OneDrive\Desktop\folder\diplom\data\parsing\companies_scores_with_reviews.xlsx')
